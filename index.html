@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="module">
+    const { renderChatBot, createChatBotMessage } = window.chatbot;
+    const inputFieldWidget = (props) => {
+        console.log(props);
+
+        const updateInput = (e) => {
+            const value = e.target.value;
+            setState(prev => ({...prev, INPUT : value }))
+        }
+
+
+        const CONTAINER = document.createElement('div');
+        const INPUT = document.createElement('input');
+        INPUT.onchange = updateInput;
+        const OUTPUT = document.createElement('div');
+        OUTPUT.textcontent = props.input;
+        CONTAINER.append(INPUT, OUTPUT);
+
+        return CONTAINER;
+    }
+
+    const ROOT = document.querySelector('.chatbot');
+    const CONFIG = {
+        botName : 'bot',
+        initialMessage : [
+            createChatBotMessage('...'),
+            { widget : 'inputFieldWidget' }
+        ],
+        state : {
+            'input' : '',
+        },
+        widgets : [
+            {
+                widgetName : 'inputFieldWidget',
+                //widgetFunc : (props) => <Overview {...props} />,
+                widgetFunc : inputFieldWidget,
+                mapStateToProps : ['input'],
+                props: {}
+            },
+        ]
+    };
+
+    //MessageParser starter code
+    class MessageParser {
+        constructor(actionProvider) {
+            this.actionprovider = actionProvider;
+        }
+        parse(message){
+             if(message.includes('hello')){
+                 this.actionProvider.hello()
+             }
+
+        }
+    }
+</script>
+</body>
+</html>
