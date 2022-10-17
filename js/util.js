@@ -8,10 +8,8 @@ export const uniqueIdGenerator = () => {
 const uniqueId = uniqueIdGenerator();
 
 export const botMessage = (message) => {
-    if (message.type === "bot") {
-        return true;
-    }
-    return false;
+    return message.type === "bot";
+
 };
 
 export const createChatMessage = (message, type) => {

@@ -1,5 +1,5 @@
 import { createClientMessage } from "/js/util.js";
-
+const DEF_LOADING = 1250;
 /**
  * renderChat() -> Builder: here can we call all the functions to create a conversation.
  * @param CONFIG
@@ -152,40 +152,28 @@ const createUserChatMessage = (message) => {
 
 
 const createLoader = () =>  {
-`<svg version="1.1" 
-    id="L4" 
-    xmlns="http://www.w3.org/2000/svg" 
-    x="0px" 
-    y="0px" 
-    viewBox="0 0 100 100" 
-    enable-background="new 0 0 0 0" 
-    xml:space="preserve">
-    <circle fill="#fff" stroke="none" cx="6" cy="50" r="6">
-        <animate
-            attributeName="opacity"
-            dur="1s"
-            values="0;1;0"
-            repeatCount="indefinite"
-            begin="0.1"/>
-    </circle>
-    <circle fill="#fff" stroke="none" cx="26" cy="50" r="6">
-        <animate
-            attributeName="opacity"
-            dur="1s"
-            values="0;1;0"
-            repeatCount="indefinite"
-            begin="0.2"/>
-    </circle>
-    <circle fill="#fff" stroke="none" cx="46" cy="50" r="6">
-        <animate
-            attributeName="opacity"
-            dur="1s"
-            values="0;1;0"
-            repeatCount="indefinite"
-            begin="0.3"/>
-    </circle>
-</svg>`;
 
+    const CONTAINER = document.createElement('div');
+    CONTAINER.classList.add("chatbot-loader-container");
+
+    CONTAINER.innerHTML =
+        `<svg
+        id="dots"
+        width="50px"
+        height="21px"
+        viewBox="0 0 132 58"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg">
+            <g stroke="none" fill="none">
+                <g id="chatbot-loader" fill="#fff">
+                    <circle id="chatbot-loader-dot1" cx="25" cy="30" r="13"></circle>
+                    <circle id="chatbot-loader-dot2" cx="65" cy="30" r="13"></circle>
+                    <circle id="chatbot-loader-dot3" cx="105" cy="30" r="13"></circle>
+                </g>
+            </g>
+        </svg>`;
+
+    return CONTAINER;
 }
 
 /**
@@ -193,15 +181,15 @@ const createLoader = () =>  {
  * @param mes
  * @param widgetRegistry
  * @param state
+ * @param updater
  * @returns {HTMLDivElement}
  */
 const createBotChatMessage = (mes, widgetRegistry, state, updater) => {
 
-    const { message, widget, loading } = mes
+    const { message, widget, loading, id } = mes
 
     const OUTER = document.createElement('div');
-    OUTER.style.display = 'flex';
-    OUTER.style.flexDirection = 'column';
+
 
     const CONTAINER = document.createElement('div');
     CONTAINER.className = 'chat-bot-message-container';
@@ -218,8 +206,19 @@ const createBotChatMessage = (mes, widgetRegistry, state, updater) => {
     MESSAGECONTAINER.className = 'chat-bot-message';
 
     if(loading) {
-        //const LOADER = createLoader();
-        MESSAGECONTAINER.innerHTML = createLoader;
+        const LOADER = createLoader();
+        MESSAGECONTAINER.append(LOADER);
+        // change the state
+        setTimeout(() => {
+            updater((state) => {
+                //find the message that we want to change state
+                const newMessage = state.messages.find(mes => mes.id === id);
+                // update the state
+                newMessage.loading = false;
+
+                return state;
+            })
+        }, DEF_LOADING);
     } else {
         MESSAGECONTAINER.textContent = message;
     }
@@ -238,6 +237,7 @@ const createBotChatMessage = (mes, widgetRegistry, state, updater) => {
 
 
     if(widget) {
+
         const widgetMarkup = widgetRegistry.getWidget(widget, state);
         WIDGETCONTAINER.append(widgetMarkup);
     }

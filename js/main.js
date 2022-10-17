@@ -78,7 +78,12 @@ const render = (
     current = CHAT;
     // Attach the bot to the HTML
     ROOT.append(CHAT);
+
+    const INPUTFIELD = document.querySelector('.chat-input');
+    INPUTFIELD.focus();
+    scrollIntoView();
 }
+
 
 window.chabot = { renderChatBot, createChatBotMessage, createClientMessage }
 
