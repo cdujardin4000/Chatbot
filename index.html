@@ -3,62 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="css/screen.css">
 </head>
 <body>
-<script type="module">
-    const { renderChatBot, createChatBotMessage } = window.chatbot;
-    const inputFieldWidget = (props) => {
-        console.log(props);
+    <div class="chat-bot">
 
-        const updateInput = (e) => {
-            const value = e.target.value;
-            setState(prev => ({...prev, INPUT : value }))
+    </div>
+    <script src="js/main.js" type="module"></script>
+    <script type="module">
+        const { renderChatBot, createChatBotMessage } = window.chabot;
+
+        const ROOT = document.querySelector('.chat-bot'); //target the element in html where the chat is pushed
+
+        const inputFieldWidget = (props) => {
+            const { setState } = props;
+            console.log("inputFieldWidget", props);
+
+            const updateInput = (e) => {
+
+                const value = e.target.value;
+                setState(prev => ({ ...prev, input: value }))
+            }
+
+            const CONTAINER = document.createElement('div');
+
+            const INPUT = document.createElement('input');
+            INPUT.onchange = updateInput;
+
+            const OUTPUT = document.createElement('span');
+            OUTPUT.innerHTML = props.input;
+            console.log(props.input);
+
+            CONTAINER.append(INPUT, OUTPUT);
+
+            return CONTAINER;
         }
+        const CONFIG = {
+            botName : 'Lexlau',
+            initialMessages : [
+                // here you can change de initial state of the conversation
+                createChatBotMessage('Bonjour', { widget : 'inputFieldWidget'}),
+                createChatBotMessage('Des questions ou besoin d´ assistance juridique?'),
+            ],
 
-
-        const CONTAINER = document.createElement('div');
-        const INPUT = document.createElement('input');
-        INPUT.onchange = updateInput;
-        const OUTPUT = document.createElement('div');
-        OUTPUT.textcontent = props.input;
-        CONTAINER.append(INPUT, OUTPUT);
-
-        return CONTAINER;
-    }
-
-    const ROOT = document.querySelector('.chatbot');
-    const CONFIG = {
-        botName : 'bot',
-        initialMessage : [
-            createChatBotMessage('...'),
-            { widget : 'inputFieldWidget' }
-        ],
-        state : {
-            'input' : '',
-        },
-        widgets : [
-            {
-                widgetName : 'inputFieldWidget',
-                //widgetFunc : (props) => <Overview {...props} />,
-                widgetFunc : inputFieldWidget,
-                mapStateToProps : ['input'],
-                props: {}
+            state : {
+                'input' : ''
             },
-        ]
-    };
 
-    //MessageParser starter code
-    class MessageParser {
-        constructor(actionProvider) {
-            this.actionprovider = actionProvider;
-        }
-        parse(message){
-             if(message.includes('hello')){
-                 this.actionProvider.hello()
-             }
+            /**
+             * WIDGETS: To use your own components in the chatbot, first you need to define it in the "widget" section of the config file:
+             * widgetName: The name to which you will refer to the widget when you call createChatBotMessage
+             * widgetFunc: A function which returns the component you want to render. It needs to take in props and spread
+             *             the props out over the given component: (props) => <Component {...props} />
+             * props: An array of props you want to pass to the component
+             * mapStateToProps: An list of properties from configuration state property that you want this component to receive as props.
+             * ---> You will then be able to use the widget when you send a response with createChatBotMessage:
+             * createChatBotMessage("Ok, one moment", {
+             *   widget: "overview"
+             * })
+             */
+            widgets : [
+                {
+                    widgetName : 'inputFieldWidget',
+                    widgetFunc : inputFieldWidget /**(props) => <overview { ...props } /> **/,
+                    mapStateToProps : ['input'],
+                    props : {}
+                }
+            ]
+        };
 
+        /**
+         *  Constructor class for messageParser
+         *  You have to write your own messageparser. The beauty of this is that you have full control over how you want to parse messages from the user. You can make it as complex or
+         *  simple as you want. The simplest version is to check for keywords with javascript .includes()
+         *
+         *  Once you pass the messageparser to the chatbot, it will initialize it with the actionprovider you provided, so that you can determine which action after you have parsed the
+         *  message.
+         */
+        class MessageParser {
+            constructor(actionProvider) {
+                this.actionprovider = actionProvider;
+            }
+            parse(message){
+                if(message.includes('hello')){
+                    this.actionprovider.hello();
+                }
+            }
         }
-    }
-</script>
+
+        /**
+         *  Constructor class for actionProvider
+         *  You have to write your own actionprovider. It will contain functions that you want to call in response to a user input. The actionprovider is given to the messageparser,
+         *  so you can use any methods you provide here inside the messageparser.
+         *
+         *  The bots response is controlled by the createChatBotMessage function that is given to the actionprovider:
+         *  createChatBotMessage("Thanks, I'll see what I can find", {
+         *   widget: "rentalCarResults",
+         *   withAvatar: true,
+         *   delay: 500
+         * })
+         */
+        class ActionProvider {
+            constructor(createChatBotMessage, setStateFunc, createClientMessage) {
+                this.createChatBotMessage = createChatBotMessage;
+                this.setState = setStateFunc;
+
+            }
+
+            hello() {
+                const message = this.createChatBotMessage('Hello from chatbot');
+                this.setState((state) => {
+                    return {
+                        ...state,
+                        messages : [ ...state.messages, message ]
+                    }
+                })
+            }
+        }
+
+        renderChatBot(ROOT, CONFIG, MessageParser, ActionProvider, ); // !!! Here the classes are called
+    </script>
 </body>
 </html>
