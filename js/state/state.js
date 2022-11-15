@@ -39,6 +39,7 @@ const stateManager = (initialState) => {
     const fireListeners = () => {
         listeners.forEach((listener) => {
             listener(state);
+            console.log(state);
         })
     }
 

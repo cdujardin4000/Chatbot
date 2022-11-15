@@ -20,7 +20,7 @@ const renderChat = (
 ) => {
     const OUTER = document.createElement('div');
     OUTER.className = 'chat-container';
-    console.log(state);
+
     const INNER = document.createElement('div');
     INNER.className = 'inner-container';
 
@@ -77,7 +77,7 @@ const createMessageContainer = (messages, widgetRegistry, state, updater) => {
  * @returns {HTMLDivElement}
  */
 const createForm = (messageParserInstance, updater) => {
-    console.log(messageParserInstance);
+    //console.log(messageParserInstance);
     const CONTAINER = document.createElement('div');
     CONTAINER.className = 'chat-input-container';
 
@@ -150,7 +150,10 @@ const createUserChatMessage = (message) => {
     return CONTAINER;
 }
 
-
+/**
+ * createLoader = () => create loader to similate someone is typing
+ * @returns {HTMLDivElement}
+ */
 const createLoader = () =>  {
 
     const CONTAINER = document.createElement('div');
@@ -184,7 +187,7 @@ const createLoader = () =>  {
  * @param updater
  * @returns {HTMLDivElement}
  */
-const createBotChatMessage = (mes, widgetRegistry, state, updater) => {
+export const createBotChatMessage = (mes, widgetRegistry, state, updater) => {
 
     const { message, widget, loading, id } = mes
 

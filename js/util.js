@@ -1,3 +1,7 @@
+/**
+ * uniqueIdGenerator = () => Create a unique id for each message
+ * @returns {function(): number}
+ */
 export const uniqueIdGenerator = () => {
     let num = 1;
     return () => {
@@ -7,11 +11,23 @@ export const uniqueIdGenerator = () => {
 
 const uniqueId = uniqueIdGenerator();
 
+
+/**
+ * botMessage = (message) => check if the message is bot and return true if it is
+ * @param message
+ * @returns {boolean}
+ */
 export const botMessage = (message) => {
     return message.type === "bot";
 
 };
 
+/**
+ * createChatMessage = (message, type) => create a message container
+ * @param message
+ * @param type
+ * @returns {{id: number, message, type}}
+ */
 export const createChatMessage = (message, type) => {
     return {
         message: message,
@@ -20,6 +36,12 @@ export const createChatMessage = (message, type) => {
     };
 };
 
+/**
+ * createChatBotMessage = (message, options) => create a bot message
+ * @param message
+ * @param options
+ * @returns {*&{id: number, message, type, loading: boolean}}
+ */
 export const createChatBotMessage = (message, options) => {
     return {
         ...createChatMessage(message, "bot"),
@@ -28,21 +50,42 @@ export const createChatBotMessage = (message, options) => {
     };
 };
 
+/**
+ * createClientMessage = (message) => create a client message
+ * @param message
+ * @returns {{id: number, message, type}}
+ */
 export const createClientMessage = (message) => {
     return createChatMessage(message, "user");
 };
 
+/**
+ *
+ * @param func
+ * @param args
+ * @returns {*}
+ */
 export const callIfExists = (func, ...args) => {
     if (func) {
         return func(...args);
     }
 };
 
+/**
+ * check if props is an object and return object if not
+ * @param object
+ * @returns {{}|*}
+ */
 export const getObject = (object) => {
     if (typeof object === "object") return object;
     return {};
 };
 
+/**
+ * get the widgets in the config and return them in an array
+ * @param config
+ * @returns {[{mapStateToProps: [string], widgetName: string, widgetFunc: function(*): HTMLDivElement, props: {}}]|*|*[]}
+ */
 export const getWidgets = (config) => {
     if (config.widgets) {
         return config.widgets;
@@ -50,6 +93,9 @@ export const getWidgets = (config) => {
     return [];
 };
 
+/**
+ *  to see the last messages if the conversation is long
+ */
 export const scrollIntoView = () => {
     const chatContainer = document.querySelector(
         ".chat-message-container"
@@ -58,6 +104,12 @@ export const scrollIntoView = () => {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 };
 
+/**
+ * validateProps = (config, MessageParser) -> check config and parser and return an error if needed
+ * @param config
+ * @param MessageParser
+ * @returns {*[]}
+ */
 export const validateProps = (config, MessageParser) => {
     const errors = [];
     if (!config.initialMessages) {
@@ -72,6 +124,7 @@ export const validateProps = (config, MessageParser) => {
             "Messageparser must implement the method 'parse', please add this method to your object. The signature is parse(message: string)."
         );
     }
+
 
     return errors;
 };

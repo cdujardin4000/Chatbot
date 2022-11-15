@@ -32,22 +32,166 @@
 
             const OUTPUT = document.createElement('span');
             OUTPUT.innerHTML = props.input;
-            console.log(props.input);
 
             CONTAINER.append(INPUT, OUTPUT);
 
             return CONTAINER;
         }
+
+        const inputFileWidget = () => {
+            console.log("inputFileWidget");
+
+            const CONTAINER = document.createElement('div');
+            const FORM = document.createElement('form');
+
+            const INPUT = document.createElement('input');
+            INPUT.type = 'file';
+
+            const SUBMIT = document.createElement('button');
+            SUBMIT.type = 'submit';
+            SUBMIT.textContent = 'Valider';
+
+            FORM.append(INPUT);
+            FORM.append(SUBMIT);
+            CONTAINER.append(FORM);
+
+            return CONTAINER;
+        }
+
+        const linkWidget = () => {
+            console.log("linkWidget");
+
+            const CONTAINER = document.createElement('div');
+            const LINK = document.createElement('a');
+
+            LINK.setAttribute('download', '');
+        }
+
+        const multiChoiceWidget = () => {
+
+        }
+
+        const radioWidget = (props) => {
+            let response = '';
+            const { setState } = props;
+            console.log("radioWidget", props);
+
+            const RADIOS = [];
+            const RADIO1 = document.createElement('input');
+            const RADIO2 = document.createElement('input');
+            const RADIO3 = document.createElement('input');
+            const RADIO4 = document.createElement('input');
+            const RADIO5 = document.createElement('input');
+            const RADIO6 = document.createElement('input');
+            const RADIO7 = document.createElement('input');
+            RADIOS.push(RADIO1, RADIO2, RADIO3, RADIO4, RADIO5, RADIO6, RADIO7);
+
+            const LABELS = [];
+            const LABEL1 = document.createElement('label');
+            const LABEL2 = document.createElement('label');
+            const LABEL3 = document.createElement('label');
+            const LABEL4 = document.createElement('label');
+            const LABEL5 = document.createElement('label');
+            const LABEL6 = document.createElement('label');
+            const LABEL7 = document.createElement('label');
+            LABELS.push(LABEL1, LABEL2, LABEL3, LABEL4, LABEL5, LABEL6, LABEL7);
+
+            const updateRadio = (e) => {
+                e.preventDefault();
+                SUBMIT.setAttribute('data-response', e.target.value);
+                response = e.target.value
+
+                console.log(e);
+            }
+
+            const radioResponse = (e) => {
+                e.preventDefault();
+                props.radio = SUBMIT.getAttribute('data-response');
+                //console.log("radioWidget", props);
+            }
+
+            const FORM = document.createElement('form');
+            FORM.onchange = updateRadio
+
+            for(let i=0; i<props.radio.length; i++){
+
+                RADIOS[i].type = 'radio';
+                RADIOS[i].name = 'rad';
+                RADIOS[i].value = props.radio[i];
+                RADIOS[i].id = props.radio[i];
+                RADIOS[i].onchange = updateRadio;
+
+                LABELS[i].textContent = props.radio[i];
+                LABELS[i].setAttribute('for', props.radio[i]);
+
+                const BR = document.createElement('br');
+
+                FORM.append(RADIOS[i], LABELS[i], BR);
+            }
+
+/**
+            const LABEL1 = document.createElement('label');
+            LABEL1.textContent = 'OUI';
+            LABEL1.setAttribute('for', 'oui')
+            DIV1.append(RADIO1, LABEL1);
+
+            const DIV2 = document.createElement('div');
+
+            const RADIO2 = document.createElement('input');
+            RADIO2.type = 'radio';
+            RADIO2.name = 'rad';
+            RADIO2.value = 'non';
+            RADIO2.id = 'non';
+            //RADIO2.onchange = updateRadio;
+
+            const LABEL2 = document.createElement('label');
+            LABEL2.textContent = 'NON';
+            LABEL2.setAttribute('for', 'non')
+            DIV2.append(RADIO2, LABEL2);
+
+            const OUTPUT = document.createElement('span');
+            OUTPUT.innerHTML = props.radio;
+
+
+            const SUBMIT = document.createElement('button');
+            SUBMIT.type = 'submit';
+            SUBMIT.textContent = 'Valider';
+
+
+            FORM.append(OUTPUT, SUBMIT );
+
+
+            return FORM;
+**/
+            const OUTPUT = document.createElement('span');
+            OUTPUT.innerHTML = props.radio;
+
+
+            const SUBMIT = document.createElement('button');
+            SUBMIT.type = 'submit';
+            SUBMIT.textContent = 'Valider';
+            SUBMIT.onclick = radioResponse;
+
+            FORM.append(OUTPUT, SUBMIT );
+
+
+            return FORM;
+        }
         const CONFIG = {
             botName : 'Lexlau',
             initialMessages : [
                 // here you can change de initial state of the conversation
-                createChatBotMessage('Bonjour', { widget : 'inputFieldWidget'}),
-                createChatBotMessage('Des questions ou besoin d´ assistance juridique?'),
+                createChatBotMessage("Bonjour, je m'appelle Justin"),
+                createChatBotMessage("Notre équipe est actuellement surchargée par les demandes, afin de continuer à vous offrir un service de qualité, je viens d'intégrer l'équipe."),
+                createChatBotMessage('Avez vous déja un dossier chez nous ?', { widget : 'radioWidget'}),
+
             ],
 
             state : {
-                'input' : ''
+                'input' : '',
+                'radio' : ['oui', 'non', 'bleu', 'vert', 'rouge'],
+                'inputFile' : '',
+                'link' : ''
             },
 
             /**
@@ -65,12 +209,57 @@
             widgets : [
                 {
                     widgetName : 'inputFieldWidget',
-                    widgetFunc : inputFieldWidget /**(props) => <overview { ...props } /> **/,
+                    widgetFunc : inputFieldWidget,
                     mapStateToProps : ['input'],
                     props : {}
-                }
+                },
+                {
+                    widgetName : 'radioWidget',
+                    widgetFunc : radioWidget,
+                    mapStateToProps : ['radio'],
+                    props : {}
+                },
+                {
+                    widgetName : 'inputFileWidget',
+                    widgetFunc : inputFileWidget,
+                    mapStateToProps : ['inputFile'],
+                    props : {}
+                },
+                {
+                    widgetName : 'linkWidget',
+                    widgetFunc : linkWidget,
+                    mapStateToProps : ['inputFile'],
+                    props : {}
+                },
             ]
         };
+/**
+        const radioStateHandler = {
+            construct(target, args) {
+                console.log(`Creating a ${target.widgetName}`);
+                // expected output: "Creating a monster1"
+
+                return new target(...args);
+            }
+        };
+
+        const proxyRadio = new Proxy(CONFIG.widgets[1], radioHandler)
+
+
+        const radioHandler = {
+            construct(target, args) {
+                console.log(`Creating a ${target.widgetName}`);
+                // expected output: "Creating a monster1"
+
+                return new target(...args);
+            }
+        };
+
+        const proxyRadio = new Proxy(CONFIG.widgets[0], radioHandler)
+
+**/
+
+
 
         /**
          *  Constructor class for messageParser

@@ -9,7 +9,9 @@ class WidgetRegistry {
     addWidget = (
         { widgetName, widgetFunc, mapStateToProps, props },
     ) => {
-        console.log('ADDING WIDGET', widgetName),
+        console.log('ADDING WIDGET', widgetName);
+        let name = widgetName;
+        console.log('ADDING WIDGET', name);
         this[widgetName] = {
             widget: widgetFunc,
             props,
@@ -38,7 +40,7 @@ class WidgetRegistry {
         if (!props) return;
 
         return props.reduce((acc, prop) => {
-            console.log(state)
+
             acc[prop] = state[prop];
             return acc;
         }, {});
