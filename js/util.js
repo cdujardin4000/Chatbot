@@ -11,6 +11,9 @@ export const uniqueIdGenerator = () => {
 
 const uniqueId = uniqueIdGenerator();
 
+export const customerIdGeneratorWidget = () => {
+    return Math.floor(Math.random() * 10000);
+}
 
 /**
  * botMessage = (message) => check if the message is bot and return true if it is

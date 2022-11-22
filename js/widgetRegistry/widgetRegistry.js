@@ -1,6 +1,7 @@
 import { getObject, scrollIntoView } from "../util.js";
 
 class WidgetRegistry {
+    widget;
     constructor(setStateFunc, actionProvider) {
         this.setState = setStateFunc;
         this.actionProvider = actionProvider;
@@ -10,8 +11,7 @@ class WidgetRegistry {
         { widgetName, widgetFunc, mapStateToProps, props },
     ) => {
         console.log('ADDING WIDGET', widgetName);
-        let name = widgetName;
-        console.log('ADDING WIDGET', name);
+
         this[widgetName] = {
             widget: widgetFunc,
             props,
@@ -29,9 +29,10 @@ class WidgetRegistry {
             ...getObject(widgetObject.props),
             ...this.mapStateToProps(widgetObject.mapStateToProps, state),
             setState: this.setState,
+
             actionProvider: this.actionProvider
         };
-
+        console.log(props.state);
         return widgetObject.widget(props);
 
     };

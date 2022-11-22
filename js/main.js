@@ -4,7 +4,9 @@ import {
     createClientMessage,
     getWidgets,
     scrollIntoView,
+    uniqueIdGenerator,
     validateProps,
+    customerIdGeneratorWidget
 } from '/js/util.js';
 
 import { createErrorMessage } from '/js/errorMessage.js';
@@ -60,7 +62,8 @@ const renderChatBot = (
     const actionProviderInstance = new actionProvider(
         createChatBotMessage,
         updater,
-        createClientMessage
+        createClientMessage,
+        uniqueIdGenerator,
     );
     const messageParserInstance = new messageParser(actionProviderInstance);
 
