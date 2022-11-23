@@ -32,7 +32,7 @@ class WidgetRegistry {
 
             actionProvider: this.actionProvider
         };
-        console.log(props.state);
+        //console.log(props.state);
         return widgetObject.widget(props);
 
     };

@@ -11,10 +11,10 @@
     </div>
     <script src="js/main.js" type="module"></script>
     <script type="module">
-        import stateManager  from "./js/state/state.js";
-        import state from "./js/state/state.js";
 
-        const { renderChatBot, createChatBotMessage, uniqueIdGenerator } = window.chabot;
+
+
+        const { renderChatBot, createChatBotMessage, uniqueIdGenerator, state} = window.chabot;
 
         const ROOT = document.querySelector('.chat-bot'); //target the element in html where the chat is pushed
 
@@ -34,7 +34,7 @@
 
             const INPUT = document.createElement('input');
             INPUT.onchange = updateInput;
-
+            //INPUT.onsubmit = createClientMessage(props.input);
             const OUTPUT = document.createElement('span');
             OUTPUT.innerHTML = props.input;
 
@@ -72,22 +72,45 @@
             LINK.setAttribute('download', '');
         }
 
-        const radiosWidget = (props) => {
+         const radiosWidget =  (props) => {
 
+             /**  const CONTAINER = document.createElement('form');
+            console.log(props.radios);
             const { setState } = props;
-            //setState(initialState => ({ ...state, radios : initialState }))
-            //console.log(props.radios);
-
-            const CONTAINER = document.createElement('div');
-            const FORM = document.createElement('form');
-
-            const renderRadios = (state  => {
-                return state.radios.map(radio => {
+            console.log(CONFIG.state['radios']);
+            let i = 1;
+            const renderRadios = () => {
+                props.radios.map(radio =>{
+                    console.log(radio);
                     const RADIO = document.createElement('input');
                     RADIO.type = "radio";
                     RADIO.className = 'radio-widget-item';
-                    RADIO.id = uniqueId();
-                    RADIO.value = radio.value;
+                    RADIO.id = i.toString();
+                    RADIO.value = radio;
+                    console.log(RADIO);
+                    const LABEL = document.createElement('label');
+                    LABEL.textContent = radio;
+                    LABEL.setAttribute('for', radio);
+                    LABEL.className = 'label-widget-item';
+                    i++;
+                    const BR = document.createElement('br');
+
+                    CONTAINER.append(RADIO, LABEL, BR)
+
+                })
+
+            }
+            await renderRadios;
+            return CONTAINER;
+
+
+
+                            state.radio['radio'].map(radio => {
+                    const RADIO = document.createElement('input');
+                    RADIO.type = "radio";
+                    RADIO.className = 'radio-widget-item';
+                    //RADIO.id = uniqueId;
+                    //RADIO.value = radio;
 
                     const LABEL = document.createElement('label');
                     LABEL.textContent = radio.value;
@@ -98,126 +121,94 @@
 
                     FORM.append(RADIO, LABEL, BR)
                 })
-            })
-            const OUTPUT = document.createElement('span');
 
-            const SUBMIT = document.createElement('button');
-            SUBMIT.type = 'submit';
-            SUBMIT.textContent = 'Valider';
-            SUBMIT.className = 'submit-radio-form'
-            //SUBMIT.onclick = updateRadio;
+             const OUTPUT = document.createElement('span');
 
-            FORM.append(OUTPUT, SUBMIT );
-            CONTAINER.append(FORM);
-            return CONTAINER;
-        }
+             const SUBMIT = document.createElement('button');
+             SUBMIT.type = 'submit';
+             SUBMIT.textContent = 'Valider';
+             SUBMIT.className = 'submit-radio-form'
+             //SUBMIT.onclick = updateRadio;
 
-/**
+             FORM.append(OUTPUT, SUBMIT );
+
+             return FORM;
+**/
+
+            const { setState } = props;
+
+            console.log("radiosWidget", props);
+
+            const RADIOS = [];
+            const RADIO1 = document.createElement('input');
+            const RADIO2 = document.createElement('input');
+            const RADIO3 = document.createElement('input');
+            const RADIO4 = document.createElement('input');
+            const RADIO5 = document.createElement('input');
+            const RADIO6 = document.createElement('input');
+            const RADIO7 = document.createElement('input');
+            RADIOS.push(RADIO1, RADIO2, RADIO3, RADIO4, RADIO5, RADIO6, RADIO7);
+
+            const LABELS = [];
+            const LABEL1 = document.createElement('label');
+            const LABEL2 = document.createElement('label');
+            const LABEL3 = document.createElement('label');
+            const LABEL4 = document.createElement('label');
+            const LABEL5 = document.createElement('label');
+            const LABEL6 = document.createElement('label');
+            const LABEL7 = document.createElement('label');
+            LABELS.push(LABEL1, LABEL2, LABEL3, LABEL4, LABEL5, LABEL6, LABEL7);
+
             const updateRadio = (e) => {
+                e.preventDefault();
+                SUBMIT.value = e.target.value;
+                console.log(SUBMIT.value);
+            }
 
+            const radioResponse = (e) => {
+                e.preventDefault();
                 const value = e.target.value;
-                setState({ radio : value });
-                OUTPUT.innerHTML = value;
+
+                setState({  radios: [value] });
+                console.log(props.radios);
             }
 
             const FORM = document.createElement('form');
-            FORM.className = 'radio-form-widget';
-            FORM.onchange = updateRadio;
-            renderRadios(initialState);
+            FORM.onchange = updateRadio
 
-
-             let response = '';
-             const { setState } = props;
-             console.log("radioWidget", props);
-
-             const RADIOS = [];
-             const RADIO1 = document.createElement('input');
-             const RADIO2 = document.createElement('input');
-             const RADIO3 = document.createElement('input');
-             const RADIO4 = document.createElement('input');
-             const RADIO5 = document.createElement('input');
-             const RADIO6 = document.createElement('input');
-             const RADIO7 = document.createElement('input');
-             RADIOS.push(RADIO1, RADIO2, RADIO3, RADIO4, RADIO5, RADIO6, RADIO7);
-
-             const LABELS = [];
-             const LABEL1 = document.createElement('label');
-             const LABEL2 = document.createElement('label');
-             const LABEL3 = document.createElement('label');
-             const LABEL4 = document.createElement('label');
-             const LABEL5 = document.createElement('label');
-             const LABEL6 = document.createElement('label');
-             const LABEL7 = document.createElement('label');
-             LABELS.push(LABEL1, LABEL2, LABEL3, LABEL4, LABEL5, LABEL6, LABEL7);
-
-             const updateRadio = (e) => {
-                e.preventDefault();
-                SUBMIT.setAttribute('data-response', e.target.value);
-                response = e.target.value
-
-                console.log(e);
-            }
-
-             const radioResponse = (e) => {
-                e.preventDefault();
-                props.radio = SUBMIT.getAttribute('data-response');
-                //console.log("radioWidget", props);
-            }
-
-             const FORM = document.createElement('form');
-             FORM.onchange = updateRadio
-
-             for(let i=0; i<props.radio.length; i++){
-
+            for(let i=0; i<props.radios.length; i++){
+                console.log(props.radios[i]);
                 RADIOS[i].type = 'radio';
                 RADIOS[i].name = 'rad';
-                RADIOS[i].value = props.radio[i];
-                RADIOS[i].id = props.radio[i];
+                RADIOS[i].value = props.radios[i];
+                RADIOS[i].id = props.radios[i];
                 RADIOS[i].onchange = updateRadio;
 
-                LABELS[i].textContent = props.radio[i];
-                LABELS[i].setAttribute('for', props.radio[i]);
+                LABELS[i].textContent = props.radios[i];
+                LABELS[i].setAttribute('for', props.radios[i]);
 
                 const BR = document.createElement('br');
 
                 FORM.append(RADIOS[i], LABELS[i], BR);
             }
 
-             /**
-             const LABEL1 = document.createElement('label');
-             LABEL1.textContent = 'OUI';
-             LABEL1.setAttribute('for', 'oui')
-             DIV1.append(RADIO1, LABEL1);
-
-             const DIV2 = document.createElement('div');
-
-             const RADIO2 = document.createElement('input');
-             RADIO2.type = 'radio';
-             RADIO2.name = 'rad';
-             RADIO2.value = 'non';
-             RADIO2.id = 'non';
-             //RADIO2.onchange = updateRadio;
-
-             const LABEL2 = document.createElement('label');
-             LABEL2.textContent = 'NON';
-             LABEL2.setAttribute('for', 'non')
-             DIV2.append(RADIO2, LABEL2);
-
-             const OUTPUT = document.createElement('span');
-             OUTPUT.innerHTML = props.radio;
+            const OUTPUT = document.createElement('span');
+            OUTPUT.innerHTML = props.radios;
 
 
-             const SUBMIT = document.createElement('button');
-             SUBMIT.type = 'submit';
-             SUBMIT.textContent = 'Valider';
+            const SUBMIT = document.createElement('button');
+            SUBMIT.value = "";
+            SUBMIT.type = 'submit';
+            SUBMIT.textContent = 'Valider';
+            SUBMIT.onclick = radioResponse;
+
+            FORM.append(OUTPUT, SUBMIT );
 
 
-             FORM.append(OUTPUT, SUBMIT );
+            return FORM;
 
 
-             return FORM;
- **/
-
+        }
 
 
 
@@ -235,13 +226,13 @@
                 createChatBotMessage("Bonjour, je m'appelle Justin"),
                 createChatBotMessage("Notre équipe est actuellement surchargée par les demandes, afin de continuer à vous offrir un service de qualité, je viens d'intégrer l'équipe."),
                 createChatBotMessage('Avez vous déja un dossier chez nous ?', { widget : 'inputFieldWidget'}),
-                createChatBotMessage('Avez vous déja un dossier chez nous ?', { widget : 'radiosWidget', radios : [ 'oui', 'non' ]})
+                createChatBotMessage('Avez vous déja un dossier chez nous ?', { widget : 'radiosWidget'})
 
             ],
 
             state : {
                 'input' : '',
-                'radios' : '',
+                'radios' : ['oui', 'non'],
                 'inputFile' : '',
                 'link' : '',
                 'customerId' : 1,
@@ -268,9 +259,9 @@
                     props : {}
                 },
                 {
-                    widgetName : 'radioWidget',
+                    widgetName : 'radiosWidget',
                     widgetFunc : radiosWidget,
-                    mapStateToProps : ['radio'],
+                    mapStateToProps : ['radios'],
                     props : {}
                 },
                 {
