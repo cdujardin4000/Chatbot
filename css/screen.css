@@ -303,6 +303,10 @@ h1 {
     font-size: 1rem;
 }
 
+.hidden {
+    display: none;
+}
+
 @keyframes load {
     0% {
         opacity: 0;

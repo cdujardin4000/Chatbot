@@ -14,7 +14,9 @@
 
 
 
-        const { renderChatBot, createChatBotMessage, uniqueIdGenerator, state} = window.chabot;
+
+
+        const { renderChatBot, createChatBotMessage, createClientMessage, uniqueId} = window.chabot;
 
         const ROOT = document.querySelector('.chat-bot'); //target the element in html where the chat is pushed
 
@@ -165,15 +167,31 @@
                 console.log(SUBMIT.value);
             }
 
+
+
             const radioResponse = (e) => {
                 e.preventDefault();
+
                 const value = e.target.value;
 
                 setState({  radios: [value] });
-                console.log(props.radios);
+                CONFIG.state.radios = [value];
+                console.log(CONFIG.state.radios);
+                const message = {message: CONFIG.state.radios[0], type: 'user', id: uniqueId };
+                setState((state) => {
+                    
+                    return {
+                        ...state,
+                        messages : [ ...state.messages, message ]
+                    }
+                })
+
+                console.log(CONFIG);
+
             }
 
             const FORM = document.createElement('form');
+
             FORM.onchange = updateRadio
 
             for(let i=0; i<props.radios.length; i++){
